@@ -1,13 +1,22 @@
 const User = require('../models/User');
+const jwt = require('jwt-simple');
+const config = require('../config');
+
+const tokenForUser = (user) => {
+    const timestamp = new Date().getTime();
+    return jwt.encode({ sub: user._id, iat: timestamp }, config.secret);
+}
 
 exports.signUp = (req, res, next) => {
     
     // VALIDATION
-
+    
 
     // If a user is already exist
     const email = req.body.email;
     const password = req.body.password;
+
+    if (!email || !password) return res.status(422).json({success: false, message: "You must provide all the fields"});
 
     User.findOne({email: email}, (err, existedUser) => {
         if (err) return next(err);
@@ -23,7 +32,7 @@ exports.signUp = (req, res, next) => {
         user.save((err, saved) => {
             if (err) return next(err);
 
-            return res.status(200).json({success: true, user: saved});
+            return res.status(200).json({success: true, token: tokenForUser(saved)});
         });
     });
 
