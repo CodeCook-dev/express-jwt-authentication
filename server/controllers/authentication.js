@@ -7,6 +7,7 @@ const tokenForUser = (user) => {
     return jwt.encode({ sub: user._id, iat: timestamp }, config.secret);
 }
 
+// SIGN UP Login
 exports.signUp = (req, res, next) => {
     
     // VALIDATION
@@ -36,4 +37,9 @@ exports.signUp = (req, res, next) => {
         });
     });
 
+}
+
+// SIGN IN Logic
+exports.signIn = (req, res, next) => {
+    return res.status(200).json({success: true, token: tokenForUser(req.user)});
 }
