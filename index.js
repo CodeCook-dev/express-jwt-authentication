@@ -3,6 +3,7 @@ const http = require('http')
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const router = require('./router');
+const cors = require('cors');
 
 const connectDB = require('./config/database');
 
@@ -13,6 +14,7 @@ connectDB();
 
 // MIDDLEWARES
 app.use(morgan('combined'))
+app.use(cors());
 app.use(bodyParser.json({type: '*/*'}));
 
 router(app);
